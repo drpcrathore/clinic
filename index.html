@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="hi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DrPC - Premium Clinic App</title>
+    <style>
+        :root { 
+            --primary: #0a2e47; 
+            --accent: #005f73; 
+            --light-blue: #00dbff; 
+            --wa-green: #128C7E; 
+            --bg-dark: #051622; 
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+        * { -webkit-user-select: none; user-select: none; box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: radial-gradient(circle at top, var(--primary), var(--bg-dark)); 
+            color: white; text-align: center; padding: 75px 0 90px; min-height: 100vh; 
+        }
+
+        .app-header { position: fixed; top: 0; width: 100%; background: rgba(5, 22, 34, 0.95); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .header-logo { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--light-blue); }
+        .home-btn { cursor:pointer; background: var(--accent); color:white; padding:7px 18px; border-radius:20px; font-weight:bold; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.2); }
+        
+        .profile-row { display: flex; align-items: center; gap: 15px; background: var(--glass); backdrop-filter: blur(10px); padding: 18px; border-radius: 20px; width: 92%; margin: 15px auto; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
+        .profile-img { width: 65px; height: 65px; border-radius: 50%; border: 2px solid var(--light-blue); }
+        
+        .info-container { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 12px; max-width: 500px; margin: 0 auto; }
+        .info-box { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; cursor: pointer; padding: 20px; transition: 0.3s ease; }
+        .info-box:active { transform: scale(0.92); background: rgba(255,255,255,0.1); }
+        .info-box h2 { font-size: 0.85rem; color: #cbd5e0; margin-top: 8px; }
+        
+        #details-page { display: none; padding: 15px 15px 100px; position: relative; }
+        .big-box { background: rgba(255,255,255,0.08); color: #e2e8f0; padding: 22px; border-radius: 22px; text-align: left; margin: 15px 0; line-height: 1.7; border-left: 4px solid var(--light-blue); }
+        
+        .photo-title { color: #ffcc00; font-size: 0.8rem; font-weight: bold; margin: 30px auto 10px auto; text-transform: uppercase; text-align: left; width: 95%; opacity: 0.8; letter-spacing: 1px; }
+        .photo-placeholder-full { background: #000; width: 95%; margin: 0 auto; min-height: 230px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .photo-placeholder-full img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .back-btn { background: rgba(255,255,255,0.2); color: white; padding: 6px 15px; border-radius: 12px; border: none; font-weight: bold; position: absolute; right: 15px; top: 15px; font-size: 0.75rem; }
+        .whatsapp-btn, .map-btn { display: block; color: white; padding: 16px; border-radius: 50px; text-decoration: none; font-weight: bold; margin: 15px auto; width: 100%; text-align: center; font-size: 1.05rem; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+        .whatsapp-btn { background: #128C7E; }
+        .map-btn { display: none; background: #3182ce; }
+
+        /* FOOTER WITH MEDICAL SIGNS */
+        .news-footer { position: fixed; bottom: 0; width: 100%; background: #051622; border-top: 1px solid var(--accent); padding: 12px 0; z-index: 2000; box-shadow: 0 -10px 30px rgba(0,0,0,0.6); }
+        .news-footer marquee { color: white; font-weight: 500; font-size: 0.9rem; }
+        .news-footer span { color: var(--light-blue); font-weight: bold; margin: 0 10px; }
+
+        #name-popup { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 3000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        .popup-card { background: #1a202c; padding: 30px; border-radius: 25px; width: 88%; max-width: 400px; color: white; border: 1px solid var(--accent); }
+        .popup-input { width: 100%; padding: 14px; margin: 18px 0; border: 1px solid #4a5568; border-radius: 12px; font-size: 1rem; background: #2d3748; color: white; outline: none; }
+        .opt-btn { padding: 12px 18px; border: 1px solid var(--light-blue); border-radius: 15px; background: rgba(0,219,255,0.05); color: white; font-weight: 500; margin: 0 6px 10px 0; font-size: 0.9rem; }
+        .next-step-btn { width: 100%; background: var(--light-blue); color: #000; border: none; padding: 15px; border-radius: 15px; font-weight: bold; margin-top: 15px; font-size: 1rem; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <div id="name-popup">
+        <div class="popup-card">
+            <h3 style="color:var(--light-blue);">नमस्ते! 👋</h3><p>कृपया अपना शुभ नाम लिखें:</p>
+            <input type="text" id="patient-name-input" class="popup-input" placeholder="आपका नाम...">
+            <div style="display:flex; gap:10px;">
+                <button style="flex:1; padding:12px; border-radius:12px; background:#4a5568; color:white; border:none;" onclick="togglePopup(false)">Cancel</button>
+                <button style="flex:1; padding:12px; border-radius:12px; background:var(--light-blue); color:black; border:none; font-weight:bold;" onclick="submitName()">Enter</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-header">
+        <div style="display:flex; align-items:center; gap:10px;"><img src="logo.jpg" class="header-logo" onerror="this.src='https://via.placeholder.com/32'"><h3>DrPC Clinic</h3></div>
+        <div onclick="showMain()" class="home-btn">Home</div>
+    </div>
+
+    <div id="main-page">
+        <div class="profile-row">
+            <img src="profileimage.jpg" class="profile-img" onerror="this.src='https://via.placeholder.com/65'">
+            <div style="text-align:left;">
+                <b style="font-size: 1.1rem;">Dr. PC Rathore</b><br>
+                <small style="color:#a0aec0;">Homeopathic Expert</small>
+            </div>
+        </div>
+        <div class="info-container" id="menu-grid"></div>
+    </div>
+
+    <div id="details-page">
+        <button class="back-btn" onclick="showMain()">Back</button>
+        <h2 id="det-title" style="color:var(--light-blue); text-align:left; margin: 15px 0 5px 15px;">Title</h2>
+        <div class="big-box" id="relatable-content"></div>
+        <a id="map-btn" href="https://goo.gl/maps/5QGQ+XM" target="_blank" class="map-btn">📍 Google Maps पर देखें</a>
+        <a id="wa-link" href="#" target="_blank" class="whatsapp-btn">💬 व्हाट्सएप मैसेज भेजें</a>
+        
+        <div id="photo-area">
+            <div class="photo-title" id="head-p1">Heading 1</div>
+            <div class="photo-placeholder-full" id="p1"></div>
+            <div class="photo-title" id="head-p2">Heading 2</div>
+            <div class="photo-placeholder-full" id="p2"></div>
+        </div>
+    </div>
+
+    <div class="news-footer">
+        <marquee scrollamount="4">
+            <span>🩺</span>डॉ. पी.सी. राठौर क्लिनिक: सटीक जांच और बेहतरीन होम्योपैथिक उपचार<span>🧬</span> 
+            <span>👨‍⚕️</span>20 वर्षों का सफल अनुभव<span>🛡️</span><span>🏥</span>स्थान: फ्रीगंज, उज्जैन<span>📍</span> 
+            <span>⏳</span>समय: 11-2 एवं 5-7 <span>📱</span>कॉल: +91-7587522844<span>✨</span> 
+            <span>🔬</span>उच्च स्तरीय परामर्श <span>⚕️</span>स्वस्थ जीवन, हमारा लक्ष्य।
+        </marquee>
+    </div>
+
+    <script>
+        const MY_PHONE = "917587522844";
+
+        const menuItems = [
+            {t:'सटीक जांच', i:'🩺', id:'diagnosis'}, {t:'अनुभवी डॉक्टर', i:'👨‍⚕️', id:'dr'},
+            {t:'उपचार शुल्क', i:'💰', id:'fees'}, {t:'पुराने रोग', i:'⏳', id:'chronic'},
+            {t:'फॉलो-अप', i:'📝', id:'follow'}, {t:'अपॉइंटमेंट', i:'📱', id:'appointment'},
+            {t:'हमारा पता', i:'📍', id:'location'}, {t:'पेशेंट रिव्यु', i:'🌟', id:'review'}
+        ];
+        
+        const questions = [
+            { id: "name", text: "👤 मरीज का पूरा नाम क्या है?", type: "text" },
+            { id: "age", text: "🎂 मरीज की उम्र (Age) क्या है?", type: "text" },
+            { id: "complaint", text: "📝 तकलीफ (Chief Complaint) क्या है?", type: "text" },
+            { id: "duration", text: "⏳ तकलीफ कब से है?", type: "options", choices: ["1 माह", "3 माह", "6 माह", "1 वर्ष", "पुराना"] },
+            { id: "reports", text: "📄 क्या पुरानी जांच रिपोर्ट है?", type: "options", choices: ["Blood", "USG", "CT/MRI", "नहीं है"] },
+            { id: "mode", text: "🏥 ट्रीटमेंट का माध्यम?", type: "options", choices: ["Offline (क्लिनिक)", "Online (कॉल)"] },
+            { id: "date", text: "📅 दिनांक चुनें:", type: "options", choices: ["आज", "कल", "अन्य"] },
+            { id: "time", text: "⏰ समय चुनें:", type: "dynamic" }
+        ];
+
+        let currentStep = 0, responses = {};
+        const grid = document.getElementById('menu-grid');
+        menuItems.forEach(item => {
+            const box = document.createElement('div'); box.className = 'info-box';
+            box.innerHTML = `<div style="font-size:1.8rem; color:var(--light-blue);">${item.i}</div><h2>${item.t}</h2>`;
+            box.onclick = () => (item.id === 'follow') ? togglePopup(true) : goToDetails(item.t, item.id);
+            grid.appendChild(box);
+        });
+
+        function showMain() { document.getElementById('main-page').style.display='block'; document.getElementById('details-page').style.display='none'; window.scrollTo(0,0); }
+        function togglePopup(show) { document.getElementById('name-popup').style.display = show ? 'flex' : 'none'; }
+        function submitName() { let n = document.getElementById('patient-name-input').value; if(n) { togglePopup(false); goToDetails('रजिस्टर्ड पेशेंट', 'follow', n); } }
+
+        function renderForm() {
+            const q = questions[currentStep];
+            let opts = q.choices || [];
+            if(q.type === 'dynamic') opts = responses.mode.includes("Offline") ? ["Morning (11-2)", "Evening (5-7)"] : ["Morning (8-10)", "Evening (8-10)"];
+            document.getElementById('relatable-content').innerHTML = `<p style="font-weight:bold; color:var(--light-blue); margin-bottom:15px;">${q.text}</p>` +
+                (q.type === 'text' ? `<input type="text" id="engine-input" class="popup-input" placeholder="यहाँ लिखें...">` : `<div id="opts"></div>`) +
+                `<button onclick="nextStep()" class="next-step-btn">आगे बढ़ें ➔</button>`;
+            if(q.type !== 'text') {
+                const box = document.getElementById('opts');
+                opts.forEach(o => { const b = document.createElement('button'); b.className='opt-btn'; b.innerText=o; b.onclick=()=> { responses[q.id]=o; nextStep(); }; box.appendChild(b); });
+            }
+        }
+
+        function nextStep() {
+            const q = questions[currentStep];
+            if(q.type === 'text') { let v = document.getElementById('engine-input').value; if(!v) return; responses[q.id]=v; }
+            currentStep++;
+            if(currentStep < questions.length) renderForm();
+            else {
+                let msg = `*नया अपॉइंटमेंट*\nनाम: ${responses.name}\nशिकायत: ${responses.complaint}\nसमय: ${responses.date} (${responses.time})`;
+                window.location.href = `https://api.whatsapp.com/send?phone=${MY_PHONE}&text=${encodeURIComponent(msg)}`;
+            }
+        }
+
+        function goToDetails(title, type, pName="") {
+            document.getElementById('main-page').style.display='none';
+            document.getElementById('details-page').style.display='block';
+            document.getElementById('det-title').innerText = title;
+            window.scrollTo(0,0);
+            const content = document.getElementById('relatable-content'), wa = document.getElementById('wa-link'), map = document.getElementById('map-btn');
+            map.style.display = (type === 'location') ? 'block' : 'none';
+            const hideWA = ['diagnosis', 'dr', 'review']; 
+            wa.style.display = (hideWA.includes(type) || type === 'appointment') ? 'none' : 'block';
+            
+            let info = "", waMsg = "नमस्ते डॉक्टर, ", h1="View 1", h2="View 2";
+            if(type === 'appointment') { currentStep=0; responses={}; renderForm(); h1="CLINIC SLOTS"; h2="VISIT TIMING"; }
+            else if(type === 'diagnosis') { info="🔍 आधुनिक पैथोलॉजी विश्लेषण एवं सटीक होम्योपैथिक उपचार।"; h1="LAB ANALYSIS"; h2="DIAGNOSIS REPORT"; }
+            else if(type === 'dr') { info="🎓 <b>BHMS, M.Pharm</b><br>⏳ 20+ वर्षों का अनुभव।"; h1="DOCTOR PROFILE"; h2="EXPERTISE"; }
+            else if(type === 'fees') { info="💰 परामर्श शुल्क की जानकारी हेतु व्हाट्सएप करें।"; h1="FEE PLAN"; h2="PAYMENT OPTIONS"; waMsg+="फीस की जानकारी चाहिए।"; }
+            else if(type === 'chronic') { info="🦴 पुराने एवं जटिल रोगों का सफल होम्योपैथिक उपचार।"; h1="CASE STUDY"; h2="TREATMENT"; waMsg+="पुराने रोगों के इलाज की जानकारी।"; }
+            else if(type === 'location') { info="🏢 डॉ. पी.सी. क्लिनिक, फ्रीगंज, उज्जैन।"; h1="CLINIC"; h2="LOCATION"; waMsg+="लोकेशन भेजें।"; }
+            else if(type === 'review') { info="⭐⭐⭐⭐⭐ मरीजों के सफल उपचार के अनुभव।"; h1="FEEDBACK"; h2="SUCCESS STORY"; }
+            else if(type === 'follow') { info=`नमस्ते <b>${pName}</b> जी, फॉलो-अप मैसेज भेजें।`; h1="TRACKER"; h2="RECOVERY"; waMsg+=`मैं ${pName} फॉलो-अप के लिए संपर्क कर रहा हूँ।`; }
+
+            if(type !== 'appointment') content.innerHTML = info;
+            wa.href = `https://api.whatsapp.com/send?phone=${MY_PHONE}&text=${encodeURIComponent(waMsg)}`;
+            document.getElementById('head-p1').innerText = h1; document.getElementById('head-p2').innerText = h2;
+            document.getElementById('p1').innerHTML = `<img src="${type}1.jpg" onerror="this.src='https://via.placeholder.com/600x400?text=${type}1.jpg'">`;
+            document.getElementById('p2').innerHTML = `<img src="${type}2.jpg" onerror="this.src='https://via.placeholder.com/600x400?text=${type}2.jpg'">`;
+        }
+    </script>
+</body>
+</html>
