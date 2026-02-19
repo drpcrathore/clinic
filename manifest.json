@@ -1,0 +1,43 @@
+{
+
+  "name": "Dr. PC Rathore Clinic",
+
+  "short_name": "DrPC Clinic",
+
+  "description": "Premium Homeopathic Care by Dr. PC Rathore",
+
+  "start_url": "index.html",
+
+  "display": "standalone",
+
+  "background_color": "#051622",
+
+  "theme_color": "#0a2e47",
+
+  "orientation": "portrait",
+
+  "icons": [
+
+    {
+
+      "src": "logo.jpg",
+
+      "sizes": "192x192",
+
+      "type": "image/jpeg"
+
+    },
+
+    {
+
+      "src": "logo.jpg",
+
+      "sizes": "512x512",
+
+      "type": "image/jpeg"
+
+    }
+
+  ]
+
+}
