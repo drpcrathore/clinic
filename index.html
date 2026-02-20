@@ -148,12 +148,34 @@
 
         function nextStep() {
             const q = questions[currentStep];
-            if(q.type === 'text') { let v = document.getElementById('engine-input').value; if(!v) return; responses[q.id]=v; }
+            if(q.type === 'text') { 
+                let v = document.getElementById('engine-input').value; 
+                if(!v) return; 
+                responses[q.id]=v; 
+            }
             currentStep++;
-            if(currentStep < questions.length) renderForm();
-            else {
-                let msg = `*नया अपॉइंटमेंट*\nनाम: ${responses.name}\nशिकायत: ${responses.complaint}\nसमय: ${responses.date} (${responses.time})`;
-                window.location.href = `https://api.whatsapp.com/send?phone=${MY_PHONE}&text=${encodeURIComponent(msg)}`;
+            if(currentStep < questions.length) {
+                renderForm();
+            } else {
+                document.getElementById('relatable-content').innerHTML = `
+                    <div style="text-align:center; padding:20px;">
+                        <h3 style="color:var(--light-blue);">धन्यवाद!</h3>
+                        <p>व्हाट्सएप खुल रहा है... <br>कृपया संदेश भेजें।</p>
+                        <div style="margin:20px auto; width:30px; height:30px; border:3px solid rgba(255,255,255,0.1); border-top:3px solid var(--light-blue); border-radius:50%; animation:spin 1s linear infinite;"></div>
+                    </div>`;
+                
+                let msg = `*नया अपॉइंटमेंट*\n\n`;
+                msg += `👤 *नाम:* ${responses.name}\n`;
+                msg += `🎂 *उम्र:* ${responses.age}\n`;
+                msg += `📝 *तकलीफ:* ${responses.complaint}\n`;
+                msg += `⏳ *अवधि:* ${responses.duration}\n`;
+                msg += `🏥 *माध्यम:* ${responses.mode}\n`;
+                msg += `📅 *दिनांक:* ${responses.date}\n`;
+                msg += `⏰ *समय:* ${responses.time}`;
+                
+                setTimeout(() => {
+                    window.location.href = `https://api.whatsapp.com/send?phone=${MY_PHONE}&text=${encodeURIComponent(msg)}`;
+                }, 1500);
             }
         }
 
@@ -232,5 +254,6 @@
 
         function genP(h, s) { return `<div class="photo-title">${h}</div><div class="photo-placeholder-full"><img src="${s}" onerror="this.src='https://via.placeholder.com/600x400?text=${h}'"></div>`; }
     </script>
+    <style> @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } </style>
 </body>
 </html>
